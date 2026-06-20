@@ -1,0 +1,22 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: whoami-50-percent-503
+  labels:
+    app.kubernetes.io/name: whoami-server
+    app.kubernetes.io/component: fault-injection
+    app.kubernetes.io/part-of: istio-mtls-lab
+spec:
+  hosts:
+    - whoami-server
+  http:
+    - fault:
+        abort:
+          percentage:
+            value: 50
+          httpStatus: 503
+      route:
+        - destination:
+            host: whoami-server
+            port:
+              number: 80

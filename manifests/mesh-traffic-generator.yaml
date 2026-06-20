@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mesh-traffic-generator
+  labels:
+    app.kubernetes.io/name: mesh-traffic-generator
+    app.kubernetes.io/component: traffic-generator
+    app.kubernetes.io/part-of: istio-mtls-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mesh-traffic-generator
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mesh-traffic-generator
+        app.kubernetes.io/component: traffic-generator
+        app.kubernetes.io/part-of: istio-mtls-lab
+    spec:
+      containers:
+        - name: mesh-traffic-generator
+          image: curlimages/curl:8.11.1
+          command:
+            - /bin/sh
+            - -c
+            - |
+              while true; do
+                echo "Calling httpbin-server"
+                curl -sS --max-time 3 http://httpbin-server:8000/get >/dev/null || true
+
+                echo "Calling nginx-server"
+                curl -sS --max-time 3 http://nginx-server >/dev/null || true
+
+                echo "Calling whoami-server"
+                curl -sS --max-time 3 http://whoami-server >/dev/null || true
+
+                sleep 1
+              done
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - test -d /proc/1
+            initialDelaySeconds: 2
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - test -d /proc/1
+            initialDelaySeconds: 10
+            periodSeconds: 20

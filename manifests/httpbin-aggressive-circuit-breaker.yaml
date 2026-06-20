@@ -1,0 +1,24 @@
+apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: httpbin-aggressive-circuit-breaker
+  labels:
+    app.kubernetes.io/name: httpbin-server
+    app.kubernetes.io/component: circuit-breaker
+    app.kubernetes.io/part-of: istio-mtls-lab
+spec:
+  host: httpbin-server
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+    connectionPool:
+      tcp:
+        maxConnections: 1
+      http:
+        http1MaxPendingRequests: 1
+        maxRequestsPerConnection: 1
+    outlierDetection:
+      consecutive5xxErrors: 3
+      interval: 10s
+      baseEjectionTime: 30s
+      maxEjectionPercent: 100
