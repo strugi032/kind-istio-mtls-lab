@@ -5,7 +5,7 @@ REQUESTS=60
 
 run_load() {
   kubectl exec -n lab-mesh deploy/load-tester -c load-tester -- \
-    fortio load -c 4 -qps 0 -n "${REQUESTS}" http://httpbin-server:8000/get
+    fortio load -c 4 -qps 0 -n "${REQUESTS}" http://httpbin-server:8000/get 2>&1
 }
 
 code_count() {
@@ -14,6 +14,7 @@ code_count() {
 }
 
 kubectl delete -n lab-mesh -f manifests/httpbin-aggressive-circuit-breaker.yaml --ignore-not-found=true >/dev/null
+sleep 5
 baseline="$(run_load)"
 printf '%s\n' "${baseline}"
 baseline_200="$(printf '%s\n' "${baseline}" | code_count 200)"
