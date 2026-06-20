@@ -1,0 +1,11 @@
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: lab-mesh-mtls
+  labels:
+    app.kubernetes.io/name: lab-mesh-mtls
+    app.kubernetes.io/component: mtls-policy
+    app.kubernetes.io/part-of: istio-mtls-lab
+spec:
+  mtls:
+    mode: STRICT
