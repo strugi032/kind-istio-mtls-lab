@@ -24,12 +24,14 @@ external_request() {
 apply_mode() {
   local mode="$1"
   local actual
+  local expected
 
   kubectl apply -n lab-mesh -f "manifests/peerauthentication-${mode}.yaml" >/dev/null
   actual="$(kubectl get peerauthentication lab-mesh-mtls -n lab-mesh -o jsonpath='{.spec.mtls.mode}')"
+  expected="$(printf '%s' "${mode}" | tr '[:lower:]' '[:upper:]')"
 
-  if [[ "${actual}" != "${mode^^}" ]]; then
-    echo "FAIL: expected PeerAuthentication ${mode^^}, found ${actual}" >&2
+  if [[ "${actual}" != "${expected}" ]]; then
+    echo "FAIL: expected PeerAuthentication ${expected}, found ${actual}" >&2
     exit 1
   fi
 }
