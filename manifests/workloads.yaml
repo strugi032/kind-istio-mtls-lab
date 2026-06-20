@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mesh-client
+  namespace: lab-mesh
   labels:
     app.kubernetes.io/name: mesh-client
     app.kubernetes.io/component: client
@@ -53,6 +54,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: httpbin-server
+  namespace: lab-mesh
   labels:
     app.kubernetes.io/name: httpbin-server
     app.kubernetes.io/component: server
@@ -73,7 +75,7 @@ spec:
         - name: httpbin-server
           image: mccutchen/go-httpbin:v2.15.0
           ports:
-            - containerPort: 80
+            - containerPort: 8080
               name: http
           resources:
             requests:
@@ -99,6 +101,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: httpbin-server
+  namespace: lab-mesh
   labels:
     app.kubernetes.io/name: httpbin-server
     app.kubernetes.io/component: server
@@ -109,12 +112,13 @@ spec:
   ports:
     - name: http
       port: 8000
-      targetPort: 80
+      targetPort: 8080
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-server
+  namespace: lab-mesh
   labels:
     app.kubernetes.io/name: nginx-server
     app.kubernetes.io/component: server
@@ -161,6 +165,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nginx-server
+  namespace: lab-mesh
   labels:
     app.kubernetes.io/name: nginx-server
     app.kubernetes.io/component: server
@@ -177,6 +182,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: whoami-server
+  namespace: lab-mesh
   labels:
     app.kubernetes.io/name: whoami-server
     app.kubernetes.io/component: server
@@ -223,6 +229,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: whoami-server
+  namespace: lab-mesh
   labels:
     app.kubernetes.io/name: whoami-server
     app.kubernetes.io/component: server
