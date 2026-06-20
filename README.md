@@ -204,6 +204,8 @@ The traffic generator continuously calls:
 - `http://nginx-server`
 - `http://whoami-server`
 
+![Kiali traffic graph showing the lab-mesh services, mTLS traffic, injected failures, and load testing](kiali-istio.png)
+
 Check logs:
 
 ```sh
